@@ -4,7 +4,7 @@
 TREE = '#';
 SLOPE = [3, 1]
 
-// parse input, remove extra line and transform to numbers
+// parse input, remove extra line and transform to a matrix
 PATH = $('pre')
   .textContent.split('\n')
   .slice(0, -1)
