@@ -1,27 +1,31 @@
-data = $('pre').textContent.split('\n').slice(0, -1).reduce((acc, line) => {
+data = $('pre')
+  .textContent.split('\n')
+  .slice(0, -1)
+  .reduce((acc, line) => {
+    const [colorVariant, colorName, , , ...containedBagsArr] = line.split(' ');
+    const _containedBags = containedBagsArr.join(' ').split(', ');
+    const containedBags =
+      _containedBags[0] === 'no other bags.'
+        ? {}
+        : _containedBags.reduce((acc, ruleStr) => {
+    const [number, colorVariant, colorName] = ruleStr.split(' ');
+        return {
+            ...acc,
+             [`${colorVariant} ${colorName}`]: Number(number)
+        }
+        }, {});
+    return {
+      ...acc,
+      [`${colorVariant} ${colorName}`]: containedBags,
+    };
+  }, {});
 
-const [colorVariant, colorName, , , ...containedBagsArr] = line.split(' ');
-const rules = containedBagsArr.join(' ').split(', ').reduce((acc, ruleStr) => {
-  const [number, colorVariant, colorName] = ruleStr.split(' ');
-
-  return {
-    ...acc,
-    [`${colorVariant} ${colorName}`]: Number(number)
-  };
-}, {})
-return {
-...acc,
-[`${colorVariant} ${colorName}`]: rules
+countBags  = (color) => {
+    let count = 0
+    for (innerColor in data[color]) {
+        count = count + data[color][innerColor] + data[color][innerColor] * countBags(innerColor)
+    }
+return count
 }
 
-}, {})
-
-replace = (obj) => mapObj(obj, (n, c) => isEmpty(data[c]) ? n : replace(multiplyObj(data[c], n)))
-mapObj = (obj, iteratee) => Object.keys(obj).reduce((acc, v) => ({
-...acc,
-[v]: iteratee(obj[v], v)
-}), {})
-multiplyObj = (obj, m) => typeof obj === 'number' ? obj * number : mapObj(obj, n => m * n)
-isEmpty = obj => Object.keys(obj).length === 0
-
-WIP
+countBags('shiny gold')
