@@ -1,4 +1,4 @@
-// TODO add comments
+// copy and paste this in the browser console at https://adventofcode.com/2020/day/7/input to get the solution
 
 data = $('pre')
   .textContent.split('\n')
