@@ -11,4 +11,4 @@ play = initialNumbers => {
   return numbers;
 };
 
-play(INITIAL_NUMBERs)[2019];
+play(INITIAL_NUMBERS)[2019];
