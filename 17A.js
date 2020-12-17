@@ -18,12 +18,20 @@
     return config?.[z]?.[y]?.[x] ?? INACTIVE;
   };
 
-  const setCell = (config, x, y, z, status) => {
-    let newConfig = JSON.parse(JSON.stringify({ ...config }));
-    newConfig[z] = newConfig[z] ?? {};
-    newConfig[z][y] = newConfig[z][y] ?? {};
-    newConfig[z][y][x] = status;
-    return newConfig;
+  const setCell = (config, x, y, z, w, status) => {
+    return {
+      ...config,
+      [w]: {
+        ...config[w],
+        [z]: {
+          ...config[w]?.[z],
+          [y]: {
+            ...config[w]?.[z]?.[y],
+            [x]: status,
+          },
+        },
+      },
+    };
   };
 
   const getNeighboursCoord = (x, y, z) => {
