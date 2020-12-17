@@ -1,3 +1,4 @@
+// @flow
 // copy and paste this code to https://adventofcode.com/2020/day/17/input to get the result
 // IT MAY TAKE SEVERAL SECONDS OR MINUTES
 
@@ -18,17 +19,14 @@
     return config?.[z]?.[y]?.[x] ?? INACTIVE;
   };
 
-  const setCell = (config, x, y, z, w, status) => {
+  const setCell = (config, x, y, z, status) => {
     return {
       ...config,
-      [w]: {
-        ...config[w],
-        [z]: {
-          ...config[w]?.[z],
-          [y]: {
-            ...config[w]?.[z]?.[y],
-            [x]: status,
-          },
+      [z]: {
+        ...config[z],
+        [y]: {
+          ...config[z]?.[y],
+          [x]: status,
         },
       },
     };
