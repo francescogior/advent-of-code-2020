@@ -1,31 +1,44 @@
-
+// @flow
 // copy and paste this code to https://adventofcode.com/2020/day/17/input to get the result
-// IT MAY TAKE SEVERAL SECONDS OR MINUTES
 
 (() => {
+  const EXAMPLE = false;
+
   const INPUT = $('pre')
     .textContent.split('\n')
     .slice(0, -1);
   const EXAMPLE_INPUT = `.#.
-  ..#
-  ###`.split('\n');
+..#
+###`.split('\n');
   const INITIAL_STATE_EXAMPLE = {
-    '0': EXAMPLE_INPUT.map(row => row.split('')),
+    '0': {
+      '0': EXAMPLE_INPUT.map(row => row.split('')),
+    },
   };
-  const INITIAL_STATE = { '0': INPUT.map(row => row.split('')) };
+  const INITIAL_STATE = EXAMPLE
+    ? INITIAL_STATE_EXAMPLE
+    : { '0': { '0': INPUT.map(row => row.split('')) } };
   const ACTIVE = '#';
   const INACTIVE = '.';
+
   const getCell = (config, x, y, z, w) => {
     return config?.[w]?.[z]?.[y]?.[x] ?? INACTIVE;
   };
 
   const setCell = (config, x, y, z, w, status) => {
-    let newConfig = JSON.parse(JSON.stringify({ ...config }));
-    newConfig[w] = newConfig[w] ?? {};
-    newConfig[w][z] = newConfig[w][z] ?? {};
-    newConfig[w][z][y] = newConfig[w][z][y] ?? {};
-    newConfig[w][z][y][x] = status;
-    return newConfig;
+    return {
+      ...config,
+      [w]: {
+        ...config[w],
+        [z]: {
+          ...config[w]?.[z],
+          [y]: {
+            ...config[w]?.[z]?.[y],
+            [x]: status,
+          },
+        },
+      },
+    };
   };
 
   const getNeighboursCoord = (x, y, z, w) => {
@@ -53,7 +66,8 @@
       ? ACTIVE
       : INACTIVE;
 
-  const getNextConfig = (config, size, step) => {
+  const getNextConfig = (config, step) => {
+    const size = INITIAL_STATE[0][0].length;
     let nextConfig = {};
     for (let l = -step; l <= step; l++)
       for (let k = -step; k <= step; k++)
@@ -78,15 +92,17 @@
     return count;
   };
 
-  const run = config => {
-    const configSize = config[0].length;
-    let currentConfig = JSON.parse(JSON.stringify(config));
-    for (let step = 1; step <= 6; step++) {
-      console.log(countActive(currentConfig));
-      currentConfig = getNextConfig(currentConfig, configSize, step);
+  const range = (start, endIncluded) => {
+    let result = [];
+    for (let i = start; i <= endIncluded; i++) {
+      result.push(i);
     }
-    return countActive(currentConfig);
+    return result;
   };
 
-  return run(INITIAL_STATE);
+  const run = (config, times) => {
+    return countActive(range(1, times).reduce(getNextConfig, config));
+  };
+
+  return run(INITIAL_STATE, 6);
 })();
