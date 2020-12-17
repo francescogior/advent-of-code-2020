@@ -81,5 +81,5 @@
     return countActive(currentConfig);
   };
 
-  run(INITIAL_STATE);
+  return run(INITIAL_STATE);
 })();
