@@ -1,4 +1,3 @@
-
 (() => {
   const INPUT = '326519478';
   const START = INPUT.split('').map(Number);
